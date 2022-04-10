@@ -33,7 +33,6 @@ const tags = {
 // S3 Bucket to hold the compiled .jar artifact
 const bucket = new aws.s3.Bucket('s3-bucket-plugin-jar', {
     bucketPrefix: 'trino-event-listener-hook-plugin-',
-    acl: 'public-read',
     forceDestroy: true,
     tags
 });
