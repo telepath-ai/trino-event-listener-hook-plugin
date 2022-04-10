@@ -3,6 +3,7 @@ A very basic plugin for Trino that sends information from the EventListener to a
 
 ## Build
 ```
+cd plugin
 mvn clean package
 ```
 
@@ -34,8 +35,8 @@ event-listener.name=event-listener-hook
 event-listener-hook.snsTopicArn=<SNS_TOPIC_ARN>
 ```
 
-*Note:* Trino will need `sns:Publish` IAM permissions for the given topic. How you do this will vary depending on your Trino deployment. 
-If your deployment is running in Kubernetes, then you can grant the permissions to the Service Account that's running the pod. 
+*Note:* Trino will need `sns:Publish` IAM permissions for the given topic. How you do this will vary depending on your 
+Trino deployment. If your deployment is running in Kubernetes, then you can grant the permissions to the Node's Instance Role. 
 If you have an access token and secret, you can pass them as environmental variables on the Trino container, and the AWS SDK will 
 automatically use them when it creates the SNS client. Here's a basic example if you were running Trino in a local container:
 ```
