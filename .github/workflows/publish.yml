@@ -23,7 +23,7 @@ jobs:
         settings-path: ${{ github.workspace }}
 
     - name: Build with Maven
-      run: mvn --batch-mode --file pom.xml
+      run: mvn --batch-mode package --file pom.xml
 
     - name: Deploy to GitHub Packages
       run:  deploy -DGITHUB_REPO=${GITHUB_REPO} -s ${GITHUB_WORKSPACE}/settings.xml
