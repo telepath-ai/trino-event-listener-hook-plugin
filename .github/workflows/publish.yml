@@ -22,7 +22,7 @@ jobs:
         cache: 'maven'
 
     - name: Deploy Maven to GitHub Packages
-      run: mvn --batch-mode deploy -DGITHUB_OWNER=${GITHUB_REPO_OWNER} --file pom.xml
+      run: mvn --batch-mode deploy -DGITHUB_REPO=${GITHUB_REPO_OWNER} --file pom.xml
       env:
         GITHUB_TOKEN: ${{ secrets.TOKEN }}
-        GITHUB_REPO_OWNER: ${{ github.repository_owner }}
+        GITHUB_REPO: ${{ github.repository }}

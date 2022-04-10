@@ -13,7 +13,7 @@
         <httpcomponents.version>4.5.13</httpcomponents.version>
         <json.version>20220320</json.version>
         <awssdk.version>2.17.166</awssdk.version>
-        <github.repo>${GITHUB_OWNER}/trino-event-listener-hook-plugin</github.repo>
+        <github.repo>${GITHUB_REPO}</github.repo>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
