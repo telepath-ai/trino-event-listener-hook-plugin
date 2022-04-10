@@ -1,4 +1,4 @@
-name: Build and publish Maven package
+name: Build and publish plugin .jar
 
 on:
   pull_request:
@@ -7,7 +7,27 @@ on:
       - main
 
 jobs:
+  # Check for the GitHub Secrets required to run this workflow. If they're missing, then we won't try to run it.
+  check-env:
+    runs-on: ubuntu-latest
+    outputs:
+      has-secrets: ${{ steps.check-secrets.outputs.hasSecrets }}
+    steps:
+      - id: check-secrets
+        name: Check for required Secrets
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          S3_BUCKET: ${{ secrets.S3_BUCKET }}
+        if: "${{ env.AWS_ACCESS_KEY_ID != '' && env.AWS_SECRET_ACCESS_KEY != '' && env.AWS_REGION != '' && env.S3_BUCKET != '' }}"
+        run: echo "::set-output name=hasSecrets::true"
+
   publish:
+    # Skip the job if the required secrets are missing
+    needs: [check-env]
+    if: needs.check-env.outputs.has-secrets == 'true'
+
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -23,11 +43,19 @@ jobs:
         settings-path: ${{ github.workspace }}
 
     - name: Build with Maven
+      working-directory: ./plugin
       run: mvn --batch-mode package --file pom.xml
 
-    - name: Deploy to GitHub Packages
-      run: mvn deploy -DGITHUB_REPO=${GITHUB_REPO} -s ${GITHUB_WORKSPACE}/settings.xml
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+
+    - name: Copy .jar to S3
+      working-directory: ./plugin
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        GITHUB_REPO: ${{ github.repository }}
-        GITHUB_WORKSPACE: ${{ github.workspace }}
+        S3_BUCKET: ${{ secrets.S3_BUCKET }}
+      run: |
+        aws s3 sync ./target/event-listener-hook.jar s3://${S3_BUCKET}/event-listener-hook.jar

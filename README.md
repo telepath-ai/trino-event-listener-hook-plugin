@@ -41,3 +41,13 @@ automatically use them when it creates the SNS client. Here's a basic example if
 ```
 docker run -p 8080:8080 ---env AWS_ACCESS_KEY_ID=<KEY> --env AWS_SECRET_ACCESS_KEY=<SECRET> --env AWS_REGION=us-west-2 trinodb/trino
 ```
+
+---
+
+## GitHub Action (Deploy to S3)
+
+The attached GitHub action will attempt to build the plugin and save the compiled .jar file in an S3 bucket. 
+This makes it easier to download the .jar file into a Trino cluster during the init stage.
+
+The GitHub action depends on a few "Secret" values that tell it which bucket to save the .jar file into. These resources
+can be automatically created using the Pulumi project located in the `/pulumi/` directory of this repo.
