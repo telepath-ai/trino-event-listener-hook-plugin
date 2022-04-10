@@ -25,4 +25,4 @@ jobs:
       run: mvn --batch-mode deploy -DGITHUB_OWNER=${GITHUB_REPO_OWNER} --file pom.xml
       env:
         GITHUB_TOKEN: ${{ secrets.TOKEN }}
-        GITHUB_REPO_OWNER: ${{ github.event.repository_owner }}
+        GITHUB_REPO_OWNER: ${{ github.repository_owner }}
