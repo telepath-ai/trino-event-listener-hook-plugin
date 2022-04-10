@@ -28,6 +28,6 @@ jobs:
     - name: Deploy to GitHub Packages
       run: mvn deploy -DGITHUB_REPO=${GITHUB_REPO} -s ${GITHUB_WORKSPACE}/settings.xml
       env:
-        GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         GITHUB_REPO: ${{ github.repository }}
         GITHUB_WORKSPACE: ${{ github.workspace }}
